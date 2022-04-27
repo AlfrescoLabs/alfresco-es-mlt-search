@@ -2,6 +2,7 @@ package org.alfresco.rest.api.ext.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.alfresco.repo.search.impl.elasticsearch.client.ElasticsearchHttpClientFactory;
 import org.alfresco.repo.search.impl.elasticsearch.permission.ElasticsearchPermissionQueryFactory;
@@ -12,7 +13,9 @@ import org.alfresco.service.cmr.repository.NodeRef;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.index.query.MoreLikeThisQueryBuilder.Item;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
@@ -33,12 +36,19 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRe
     private ElasticsearchHttpClientFactory httpClientFactory;
 
     @Override
-    public List<NodeRef> create(List<NodeRef> list, Parameters parameters)
+    public List<NodeRef> create(List<NodeRef> targetNodes, Parameters parameters)
     {
         try
         {
-            QueryBuilder query = null;
+            // Build MLT query.
+            String[] fields = new String[]{"cm%3Acontent"};
+            Item[] likeItems = targetNodes.stream()
+                                          .map(nodeRef -> new Item(INDEX_NAME, nodeRef.getId()))
+                                          .collect(Collectors.toList())
+                                          .toArray(new Item[targetNodes.size()]);
+            QueryBuilder query = QueryBuilders.moreLikeThisQuery(fields, null, likeItems);
 
+            // Add permission checking.
             QueryBuilder queryWithPermissions = elasticsearchPermissionQueryFactory
                     .getQueryWithPermissionFilter(query,
                             this.includeGroupsForRoleAdmin);
