@@ -17,14 +17,14 @@
 
         <!-- Properties used in dependency declarations, you don't need to change these -->
         <alfresco.groupId>org.alfresco</alfresco.groupId>
-        <alfresco.bomDependencyArtifactId>acs-community-packaging</alfresco.bomDependencyArtifactId>
+        <alfresco.bomDependencyArtifactId>acs-packaging</alfresco.bomDependencyArtifactId>
         <alfresco.platform.version>7.2.0</alfresco.platform.version>
         <alfresco.platform.docker.user>alfresco</alfresco.platform.docker.user>
         <alfresco.share.version>14.96</alfresco.share.version>
         <alfresco.share.docker.version>7.2.0</alfresco.share.docker.version>
 
         <!-- Docker images -->
-        <docker.acs.image>alfresco/alfresco-content-repository-community</docker.acs.image>
+        <docker.acs.image>quay.io/alfresco/alfresco-content-repository</docker.acs.image>
         <docker.share.image>alfresco/alfresco-share</docker.share.image>
 
         <keystore.settings>-Dencryption.keystore.type=JCEKS
@@ -75,7 +75,7 @@
         <!-- The main Alfresco Repo dependency for compiling Java code in src/main/java -->
         <dependency>
             <groupId>${alfresco.groupId}</groupId>
-            <artifactId>alfresco-remote-api</artifactId>
+            <artifactId>alfresco-enterprise-remote-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
