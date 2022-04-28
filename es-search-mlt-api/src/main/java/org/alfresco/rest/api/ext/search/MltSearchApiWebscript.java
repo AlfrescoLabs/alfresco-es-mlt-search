@@ -13,7 +13,9 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<Node>
     @Override
     public List<Node> create(List<Node> list, Parameters parameters)
     {
-        return List.of(new Node());
+        Node node = new Node();
+        node.setNodeId("1234567890");
+        return List.of(node, node);
     }
 
 }
