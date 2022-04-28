@@ -20,7 +20,6 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @EntityResource(name="mltsearch", title = "MoreLikeThis")
 public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRef>
@@ -28,11 +27,9 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRe
     private static final Logger LOGGER = LoggerFactory.getLogger(MltSearchApiWebscript.class);
     /** Hardcoded index name. */
     public static final String INDEX_NAME = "alfresco";
-    @Autowired
     private ElasticsearchPermissionQueryFactory elasticsearchPermissionQueryFactory;
     /** Hardcoded to true. */
     private boolean includeGroupsForRoleAdmin = true;
-    @Autowired
     private ElasticsearchHttpClientFactory httpClientFactory;
 
     @Override
@@ -84,4 +81,13 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRe
         }
     }
 
+    public void setElasticsearchPermissionQueryFactory(ElasticsearchPermissionQueryFactory elasticsearchPermissionQueryFactory)
+    {
+        this.elasticsearchPermissionQueryFactory = elasticsearchPermissionQueryFactory;
+    }
+
+    public void setHttpClientFactory(ElasticsearchHttpClientFactory httpClientFactory)
+    {
+        this.httpClientFactory = httpClientFactory;
+    }
 }
