@@ -51,6 +51,9 @@ services:
         -Dcsrf.filter.enabled=false
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
         "
+    volumes:
+        - alf-repo-data:/usr/local/tomcat/alf_data
+        - alf-repo-logs:/usr/local/tomcat/logs
 
   transform-router:
     image: quay.io/alfresco/alfresco-transform-router:${TRANSFORM_ROUTER_TAG}
@@ -111,6 +114,9 @@ services:
     command: postgres -c max_connections=300 -c log_min_messages=LOG
     ports:
       - "5432:5432"
+    volumes:
+        - postgres-data:/var/lib/postgresql/data
+        - postgres-logs:/var/log/postgresql
 
   elasticsearch:
     image: elasticsearch:${ELASTICSEARCH_TAG}
@@ -129,6 +135,8 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
 
   kibana:
     image: kibana:${KIBANA_TAG}
@@ -159,6 +167,8 @@ services:
       - "5672:5672" # AMQP
       - "61616:61616" # OpenWire
       - "61613:61613" # STOMP
+    volumes:
+        - activemq-data:/opt/activemq/data
 
   digital-workspace:
     image: quay.io/alfresco/alfresco-digital-workspace:${ADW_TAG}
@@ -190,3 +200,9 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
+  alf-repo-data:
+  activemq-data:
+  alf-repo-logs:
+  postgres-data:
+  postgres-logs:
+  elasticsearch-data:
