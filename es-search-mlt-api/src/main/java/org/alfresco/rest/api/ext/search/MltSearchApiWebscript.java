@@ -71,6 +71,7 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<Node>
             {
                 Node node = new Node();
                 node.setNodeId(hit.getId());
+                node.setName(hit.getSourceAsMap().get("cm%3Aname").toString());
                 results.add(node);
             }
             return results;
