@@ -25,16 +25,18 @@ import org.slf4j.LoggerFactory;
 public class MltSearchApiWebscript implements EntityResourceAction.Create<Node>
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MltSearchApiWebscript.class);
+    private static ElasticsearchPermissionQueryFactory elasticsearchPermissionQueryFactory;
+    private static ElasticsearchHttpClientFactory httpClientFactory;
+
     /** Hardcoded index name. */
     public static final String INDEX_NAME = "alfresco";
-    private ElasticsearchPermissionQueryFactory elasticsearchPermissionQueryFactory;
     /** Hardcoded to true. */
     private boolean includeGroupsForRoleAdmin = true;
-    private ElasticsearchHttpClientFactory httpClientFactory;
 
     @Override
     public List<Node> create(List<Node> list, Parameters parameters)
     {
+
         try
         {
             // Build MLT query.
