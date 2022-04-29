@@ -37,29 +37,6 @@ services:
         -Dindex.subsystem.name=elasticsearch
         -Delasticsearch.host=elasticsearch
         -Delasticsearch.indexName=${ELASTICSEARCH_INDEX_NAME}
-        -Delasticsearch.port=9200
-        -Delasticsearch.baseUrl=/
-        -Delasticsearch.secureComms=none
-        -Delasticsearch.user=
-        -Delasticsearch.password=
-        -Delasticsearch.archive.indexName=archive
-        -Delasticsearch.max.total.connections=30
-        -Delasticsearch.max.host.connections=30
-        -Delasticsearch.http.socket.timeout=30000
-        -Delasticsearch.http.connection.timeout=1000
-        -Delasticsearch.ssl.host.name.verification=false
-        -Delasticsearch.query.includeGroupsForRoleAdmin=false
-        -Delasticsearch.index.mapping.total_fields.limit=7500
-        -Delasticsearch.createIndexIfNotExists=false
-        -Delasticsearch.retryPeriodSeconds=10
-        -Delasticsearch.retryAttempts=3
-        -Delasticsearch.lockRetryPeriodSeconds=10         
-        -Dsearch.solrTrackingSupport.enabled=true
-        -Dsearch.solrTrackingSupport.ignorePathsForSpecificTypes=false
-        -Dsearch.solrTrackingSupport.ignorePathsForSpecificAspects=false
-        -Dsolr.query.fts.queryConsistency=TRANSACTIONAL_IF_POSSIBLE
-        -Dsolr.query.cmis.queryConsistency=TRANSACTIONAL_IF_POSSIBLE
-        -Dsolr.query.hybrid.enabled=false
         -Dshare.host=127.0.0.1
         -Dshare.port=8080
         -Dalfresco.host=localhost
@@ -74,9 +51,9 @@ services:
         -Dcsrf.filter.enabled=false
         -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80
         "
-    volumes:
-        - alf-repo-data:/usr/local/tomcat/alf_data
-        - alf-repo-logs:/usr/local/tomcat/logs
+    # volumes:
+    #     - alf-repo-data:/usr/local/tomcat/alf_data
+    #     - alf-repo-logs:/usr/local/tomcat/logs
 
   transform-router:
     image: quay.io/alfresco/alfresco-transform-router:${TRANSFORM_ROUTER_TAG}
@@ -109,8 +86,8 @@ services:
       scheduler.cleanup.interval: 86400000
     ports:
       - "8099:8099"
-    volumes:
-      - shared-file-store-volume:/tmp/Alfresco/sfs
+    # volumes:
+    #   - shared-file-store-volume:/tmp/Alfresco/sfs
 
   share:
     image: quay.io/alfresco/alfresco-share:${SHARE_TAG}
@@ -137,9 +114,9 @@ services:
     command: postgres -c max_connections=300 -c log_min_messages=LOG
     ports:
       - "5432:5432"
-    volumes:
-        - postgres-data:/var/lib/postgresql/data
-        - postgres-logs:/var/log/postgresql
+    # volumes:
+    #     - postgres-data:/var/lib/postgresql/data
+    #     - postgres-logs:/var/log/postgresql
 
   elasticsearch:
     image: elasticsearch:${ELASTICSEARCH_TAG}
@@ -158,8 +135,8 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
+    # volumes:
+    #   - elasticsearch-data:/usr/share/elasticsearch/data
 
   kibana:
     image: kibana:${KIBANA_TAG}
@@ -190,8 +167,8 @@ services:
       - "5672:5672" # AMQP
       - "61616:61616" # OpenWire
       - "61613:61613" # STOMP
-    volumes:
-        - activemq-data:/opt/activemq/data
+    # volumes:
+    #     - activemq-data:/opt/activemq/data
 
   digital-workspace:
     image: quay.io/alfresco/alfresco-digital-workspace:${ADW_TAG}
@@ -223,9 +200,9 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-  alf-repo-data:
-  activemq-data:
-  alf-repo-logs:
-  postgres-data:
-  postgres-logs:
-  elasticsearch-data:
+  # alf-repo-data:
+  # activemq-data:
+  # alf-repo-logs:
+  # postgres-data:
+  # postgres-logs:
+  # elasticsearch-data:

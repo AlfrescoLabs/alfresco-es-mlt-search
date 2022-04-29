@@ -9,7 +9,7 @@ import org.alfresco.repo.search.impl.elasticsearch.permission.ElasticsearchPermi
 import org.alfresco.rest.framework.resource.EntityResource;
 import org.alfresco.rest.framework.resource.actions.interfaces.EntityResourceAction;
 import org.alfresco.rest.framework.resource.parameters.Parameters;
-import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.rest.api.model.Node;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @EntityResource(name="mltsearch", title = "MoreLikeThis")
-public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRef>
+public class MltSearchApiWebscript implements EntityResourceAction.Create<Node>
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MltSearchApiWebscript.class);
     /** Hardcoded index name. */
@@ -33,16 +33,16 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRe
     private ElasticsearchHttpClientFactory httpClientFactory;
 
     @Override
-    public List<NodeRef> create(List<NodeRef> targetNodes, Parameters parameters)
+    public List<Node> create(List<Node> list, Parameters parameters)
     {
         try
         {
             // Build MLT query.
             String[] fields = new String[]{"cm%3Acontent"};
-            Item[] likeItems = targetNodes.stream()
-                                          .map(nodeRef -> new Item(INDEX_NAME, nodeRef.getId()))
+            Item[] likeItems = list.stream()
+                                          .map(nodeRef -> new Item(INDEX_NAME, nodeRef.getNodeId()))
                                           .collect(Collectors.toList())
-                                          .toArray(new Item[targetNodes.size()]);
+                                          .toArray(new Item[list.size()]);
             QueryBuilder query = QueryBuilders.moreLikeThisQuery(fields, null, likeItems);
 
             // Add permission checking.
@@ -63,10 +63,12 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRe
 
             LOGGER.debug("Response from query {}", searchResponse.toString());
 
-            List<NodeRef> results = new ArrayList<>();
+            List<Node> results = new ArrayList<>();
             for (SearchHit hit : searchResponse.getHits().getHits())
             {
-                results.add(new NodeRef(hit.field("_id").getValue()));
+                Node node = new Node();
+                node.setNodeId(hit.field("_id").getValue());
+                results.add(node);
             }
             return results;
         }
@@ -76,7 +78,7 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<NodeRe
         }
         catch (Exception exception)
         {
-            LOGGER.debug("Exception while executing query.", exception);
+            LOGGER.error("Exception while executing query.", exception);
             throw new RuntimeException(exception);
         }
     }
