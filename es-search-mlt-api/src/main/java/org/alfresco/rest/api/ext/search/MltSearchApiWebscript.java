@@ -66,10 +66,11 @@ public class MltSearchApiWebscript implements EntityResourceAction.Create<Node>
             LOGGER.debug("Response from query {}", searchResponse.toString());
 
             List<Node> results = new ArrayList<>();
+
             for (SearchHit hit : searchResponse.getHits().getHits())
             {
                 Node node = new Node();
-                node.setNodeId(hit.field("_id").getValue());
+                node.setNodeId(hit.getId());
                 results.add(node);
             }
             return results;
